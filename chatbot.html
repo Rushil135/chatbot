@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .chat-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .chat-messages {
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .message:last-child {
+            border-bottom: none;
+        }
+
+        .chat-input {
+            padding: 10px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #ccc;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+
+        #send-button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #send-button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Burger Chatbot</h2>
+        </div>
+        <div class="chat-messages">
+            <div class="message" id="bot-message">
+                <p>Welcome to Burger Chatbot! What can I help you with today?</p>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.querySelector('.chat-messages');
+        const userInput = document.querySelector('#user-input');
+        const sendButton = document.querySelector('#send-button');
+
+        let botResponses = {
+            'hello': 'Hi! Welcome to Burger Chatbot. What can I help you with today?',
+            'hi': 'Hello! What brings you here?',
+            'how are you': 'I\'m doing great, thanks! How about you?',
+            'time': 'The current time is ' + getCurrentTime(),
+            'menu': 'Here is our menu:\n\n* Burgers: $5.99\n* Fries: $2.99\n* Drinks: $1.99\n* Combo Meals: $7.99',
+            'specials': 'Today\'s specials are:\n\n* Buy one burger, get one free\n* Free fries with the purchase of a combo meal',
+            'offers': 'Today\'s offers are:\n\n* 10% off all orders over $20\n* Free delivery on orders over $30',
+            'what should i order': 'Take a look at our specials for today:\nToday\'s specials are:\n\n* Buy one burger, get one free\n* Free fries with the purchase of a combo meal',
+            'default': 'I didn\'t understand that. Can you please rephrase?'
+        };
+
+        sendButton.addEventListener('click', () => {
+            const userInputValue = userInput.value.trim();
+            if (userInputValue!== '') {
+                addMessage('user', userInputValue);
+                const botResponse = getBotResponse(userInputValue);
+                addMessage('bot', botResponse);
+                userInput.value = '';
+            }
+        });
+
+        function addMessage(type, message) {
+            const messageHTML = `
+                <div class="message ${type}">
+                    <p>${message}</p>
+                </div>
+            `;
+            chatMessages.innerHTML += messageHTML;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+
+                function getBotResponse(userInput) {
+            const userInputLowercase = userInput.toLowerCase();
+            for (const key in botResponses) {
+                if (userInputLowercase == key || userInputLowercase.startsWith(key)) {
+                    return botResponses[key];
+                }
+            }
+            return botResponses['default'];
+        }
+
+        function getCurrentTime() {
+            const date = new Date();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+            return `The current time is: ${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+        }
+
+        function padZero(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+    </script>
+</body>
+</html>
